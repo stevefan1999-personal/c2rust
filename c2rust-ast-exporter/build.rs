@@ -129,6 +129,7 @@ fn build_native(llvm_info: &LLVMInfo) {
                 // Where to find LLVM/Clang CMake files
                 .define("LLVM_DIR", &format!("{}/cmake/llvm", llvm_lib_dir))
                 .define("Clang_DIR", &format!("{}/cmake/clang", llvm_lib_dir))
+                .define("VCPKG_TARGET_TRIPLET", "x64-mingw-static")
                 // What to build
                 .build_target("clangAstExporter")
                 .build();
@@ -151,6 +152,8 @@ fn build_native(llvm_info: &LLVMInfo) {
     // BUILD_SHARED_LIBS=ON; programs linking to clang are required to
     // link to libclang-cpp.so instead of individual libraries.
     let use_libclang = if cfg!(target_os = "macos") {
+        false
+    } else if cfg!(target_os = "windows") {
         false
     } else {
         // target_os = "linux"
@@ -319,6 +322,8 @@ impl LLVMInfo {
                 let dylib_suffix = {
                     if cfg!(target_os = "macos") {
                         ".dylib"
+                    } else if cfg!(target_os = "windows") {
+                        ".dll"
                     } else {
                         ".so"
                     } // Windows is not supported
