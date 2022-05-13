@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.4.3)
 project(ASTExporter)
 
+find_package(tinycbor)
+
+if (NOT tinycbor_FOUND)
+
 #################################################
 # TinyCBOR                                      #
 #################################################
@@ -31,6 +35,8 @@ include_directories(${CMAKE_BINARY_DIR}/include)
 add_library(tinycbor STATIC IMPORTED)
 set_target_properties(tinycbor PROPERTIES IMPORTED_LOCATION ${CMAKE_BINARY_DIR}/lib/libtinycbor.a)
 add_dependencies(tinycbor tinycbor_build)
+
+endif()
 
 set(AST_EXPORTER_SRCS
   AstExporter.cpp
