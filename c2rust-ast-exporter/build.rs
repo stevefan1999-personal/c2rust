@@ -129,7 +129,7 @@ fn build_native(llvm_info: &LLVMInfo) {
                 // Where to find LLVM/Clang CMake files
                 .define("LLVM_DIR", &format!("{}/cmake/llvm", llvm_lib_dir))
                 .define("Clang_DIR", &format!("{}/cmake/clang", llvm_lib_dir))
-                .define("VCPKG_TARGET_TRIPLET", "x64-mingw-static")
+                .define("VCPKG_TARGET_TRIPLET", std::env::var("VCPKG_TARGET_TRIPLET").unwrap_or("x64-mingw-static".to_owned()))
                 // What to build
                 .build_target("clangAstExporter")
                 .build();
